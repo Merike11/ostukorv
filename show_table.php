@@ -15,7 +15,6 @@ try {
   $statement = $connection->prepare($sql);
   $statement->execute();
   
-  
   $result = $statement->fetchAll();
   } catch(PDOException $error) {
   echo $sql . "<br>" . $error->getMessage();
@@ -87,6 +86,7 @@ try {
       ?>
       <div class="row">Kokku: <?php echo $total_quantity; ?> toodet</div>
       <div class="row"><strong>Hind kokku: <?php echo number_format($total_price, 2); ?> € </strong></div>
+      <div class="row"><a href="/order.php" class="btn btn-success">Maksma</a></div>
       
     </div>
   </div>		
