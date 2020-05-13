@@ -15,6 +15,9 @@
 
 // STEP 1. Setup private key
 // =========================
+session_start();
+
+$total_price=$_SESSION['total_price'];
 
 $private_key = openssl_pkey_get_private(
 "-----BEGIN RSA PRIVATE KEY-----
@@ -53,16 +56,16 @@ $fields = array(
         "VK_VERSION"     => "008",
         "VK_SND_ID"      => "uid100010",
         "VK_STAMP"       => "12345",
-        "VK_AMOUNT"      => "number_format($total_price, 2)",
+        "VK_AMOUNT"      => number_format($total_price, 2),
         "VK_CURR"        => "EUR",
         "VK_ACC"         => "EE171010123456789017",
         "VK_NAME"        => "Toidupood",
         "VK_REF"         => "1234561",
         "VK_LANG"        => "EST",
         "VK_MSG"         => "Ostud Toidupoest",
-        "VK_RETURN"      => "http://localhost:8080/project/DQnxvHFxeQR8m5cC?payment_action=success",
-        "VK_CANCEL"      => "http://localhost:8080/project/DQnxvHFxeQR8m5cC?payment_action=cancel",
-        "VK_DATETIME"    => DateTimeInterface::ISO8601,   //"2020-05-09T20:48:57+0300"
+        "VK_RETURN"      => "http://localhost:8081/success.php",
+        "VK_CANCEL"      => "http://localhost:8081/cancel.php",
+        "VK_DATETIME"    => date(DATE_ISO8601),   //"2020-05-09T20:48:57+0300"
         "VK_ENCODING"    => "utf-8",
 );
 

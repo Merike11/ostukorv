@@ -50,18 +50,22 @@ require "templates/header.php";
     </div>
   </div>		
 <?php
+$_SESSION['total_price']= $total_price;
 } else {
 ?>
 <div class="no-records">Sinu ostukorv on veel tühi</div>
 <?php 
 }
+if(!empty($_SESSION['cart_item'])){
+
+
 ?>
 <div class="container float-left" >
 <h4>Tellimuse vormistamine:</h4>
 
 <div class="order_id">Tellimuse kood: <?php echo $_SESSION["order_id"];?></div>
 
-<form>
+<form method='POST' action="payment_redirect.php">
     <div class="form-group row">
         <label for="firstname" class="col-sm-2 col-form-label">Eesnimi</label>
         <div class="col-sm-10">
@@ -91,13 +95,13 @@ require "templates/header.php";
             <legend class="col-form-label col-sm-2 pt-0">Makseviis</legend>
             <div class="col-sm-10">
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="gridRadios" id="seb-radio" value="option1" checked>
+                    <input class="form-check-input" type="radio" name="payment_method" id="seb-radio" value="SEB" checked>
                     <label class="form-check-label" for="seb-radio">
                         SEB makselink
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="gridRadios" id="swedbank-radio" value="option2">
+                    <input class="form-check-input" type="radio" name="payment_method" id="swedbank-radio" value="Swedbank">
                     <label class="form-check-label" for="swedbank-radio">
                         Swedbank makselink
                     </label>
@@ -111,3 +115,6 @@ require "templates/header.php";
         </div>
     </div>
 </form>
+<?php 
+}
+?>

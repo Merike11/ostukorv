@@ -1,8 +1,8 @@
 <?php
 session_start();
 //session_destroy();
-if(!isset($_SESSION['cart_item'])){
-  $_SESSION['cart_item']= [];
+if(!isset($_SESSION["cart_item"])){
+  $_SESSION["cart_item"]= [];
 } 
 
 try {
@@ -46,13 +46,11 @@ try {
     <?php endforeach; ?>
   </div>
 
-  
-
     <div class="container float-left" >
       <div class="cart">
         <h4>Ostukorv:</h4>
         <?php
-          if(!empty($_SESSION['cart_item'])){
+          if(!empty($_SESSION["cart_item"])){
               
             $total_quantity = 0;
             $total_price = 0;
@@ -97,7 +95,5 @@ try {
 <?php 
 }
 ?>
-
-
 
 <?php require "templates/footer.php"; ?>

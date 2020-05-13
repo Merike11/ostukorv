@@ -8,7 +8,7 @@ if (!isset($_SESSION["cart_item"])){
         echo "Code not set";
     } else{
         foreach($_SESSION["cart_item"] as $key => $value) {
-            if ($value['order_item_code']==$_GET["code"]) {
+            if ($value["order_item_code"]==$_GET["code"]) {
                 if($_SESSION["cart_item"][$key]["amount"] === 1){
                     unset($_SESSION["cart_item"][$key]);
                 } else {

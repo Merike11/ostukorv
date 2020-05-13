@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <title>Example payment usage - Swedbank - Pangalink-net</title>
+        <title>Example payment usage - <?php echo $_post['payment_method']; ?>- Pangalink-net</title>
     </head>
     <body>
 <?php
@@ -15,8 +15,11 @@
 
 // STEP 1. Setup private key
 // =========================
+session_start();
 
-$private_key = openssl_pkey_get_private(
+$total_price=$_SESSION['total_price'];
+
+$private_key_swed = openssl_pkey_get_private(
 "-----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEA5Jb/Rh56l4YTkiI49FU8RPlXhzrVt4nV3mc2NwohvPnm47MB
 n/YKdaepR3UbgGhTGtEKrHLfp+B4F7IgO9wljIJT/dW4JBXmWdP2+KRMoLLieeSF
@@ -44,7 +47,7 @@ JkR7OQKBgFPSI11CIwSk9XWjxCBSSj1YCD6CF3LTaxWgdLycjyT4sMy/r0TB45DQ
 hyywf4+e7VZ1SYSH57XAR7VBlGGB/pDdsOk+Fi49eMP98++g3Qngcg3EFokXtYYq
 x84OA9oZoQl6e3fxJP2NOvrOIrL4hi3IA79cy8M5QnXAb5UCrsYk
 -----END RSA PRIVATE KEY-----");
-
+    
 // STEP 2. Define payment information
 // ==================================
 
@@ -53,16 +56,16 @@ $fields = array(
         "VK_VERSION"     => "008",
         "VK_SND_ID"      => "uid100023",
         "VK_STAMP"       => "12345",
-        "VK_AMOUNT"      => "number_format($total_price, 2)",
+        "VK_AMOUNT"      => number_format($total_price, 2),
         "VK_CURR"        => "EUR",
         "VK_ACC"         => "EE152200221234567897",
         "VK_NAME"        => "Toidupood",
         "VK_REF"         => "1234561",
         "VK_LANG"        => "EST",
         "VK_MSG"         => "Ostud Toidupoest",
-        "VK_RETURN"      => "http://localhost:8080/project/c5chykbg0T3Pq2CO?payment_action=success",
-        "VK_CANCEL"      => "http://localhost:8080/project/c5chykbg0T3Pq2CO?payment_action=cancel",
-        "VK_DATETIME"    => DateTimeInterface::ISO8601,   //"2020-05-12T19:15:39+0300",
+        "VK_RETURN"      => "http://localhost:8081/success.php",
+        "VK_CANCEL"      => "http://localhost:8081/cancel.php",
+        "VK_DATETIME"    => date(DATE_ISO8601),   //"2020-05-12T19:15:39+0300",
         "VK_ENCODING"    => "utf-8",
 );
 
@@ -93,9 +96,13 @@ $data = str_pad (mb_strlen($fields["VK_SERVICE"], "UTF-8"), 3, "0", STR_PAD_LEFT
 // STEP 4. Sign the data with RSA-SHA1 to generate MAC code
 // ========================================================
 
-openssl_sign ($data, $signature, $private_key, OPENSSL_ALGO_SHA1);
+$signed=openssl_sign ($data, $signature, $private_key_swed, OPENSSL_ALGO_SHA1);
 
 /* CgAeXK2FxTbWkZMEzcTQQiaRYuhnWDNETYXcJ1pw30ezC4k28S/5OtabwJJcxV2UswQl1s8W2eb1O5+HLySsqiYOUUzT4Xihp3tUPIf+rd8nt9XiIsRbke5dSzElLYErR0rrbcIydjl9l0G1emxSX5NfXoYW29V4+CmSIA/35X0Btc9WQB/uBtzDrbtDt282uLFJk90WIKl4E1sNcKPvqenNv6Xz87Tzj/TeeJ8wRvJ6BT9MB/69Y5ieqe5Fu48lLdyicwweIOYCRy7HYHu7wYTZepav+/mI02hmxEp82u4hBGK35KXXlYcSS7Bz4eIb6s+C7wrJhoqzzlgNFwidHA== */
+if(!$signed){
+    print_r(sprintf('OpenSSL data signing failed with error: %s', openssl_error_string()));
+    print_r($private_key);
+}
 $fields["VK_MAC"] = base64_encode($signature);
 
 // STEP 5. Generate POST form with payment data that will be sent to the bank
@@ -103,9 +110,9 @@ $fields["VK_MAC"] = base64_encode($signature);
 ?>
 
         <h1><a href="http://localhost:8080/">Pangalink-net</a></h1>
-        <p>Makse teostamise näidisrakendus <strong>"Swedbank"</strong></p>
+        <p>Makse teostamise näidisrakendus <strong><?php echo $_POST['payment_method'];?></strong></p>
 
-        <form method="post" action="http://localhost:8080/banklink/swedbank-common">
+        <form method="post" action="http://localhost:8080/banklink/swedbank-common" >
             <!-- include all values as hidden form fields -->
 <?php foreach($fields as $key => $val):?>
             <input type="hidden" name="<?php echo $key; ?>" value="<?php echo htmlspecialchars($val); ?>" />
