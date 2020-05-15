@@ -9,3 +9,4 @@ Makselahendus Swedbank lingile pay.php lehel.
 
 Edukas makse suunatakse success.php lehele ja tellimus loetakse täidetuks ja kustutatakse. 
 Vigane makse suunatakse tagasi order.php lehele uuesti maksma.
+[ostukorv](https://ta18toose.itmajakas.ee/Hajusrakendused/ostukorv/index.php)
